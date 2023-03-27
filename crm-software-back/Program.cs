@@ -15,18 +15,19 @@ using System.Text;
 using crm_software_back.Services.EnduserServices;
 using Stripe;
 using crm_software_back.Services.PaymentServices;
+using crm_software_back.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-var emailConfig = builder.Configuration
-    .GetSection("EmailConfiguration")
-    .Get<EmailConfiguration>();
+//var emailConfig = builder.Configuration
+//    .GetSection("EmailConfiguration")
+//    .Get<EmailConfiguration>();
 
-builder.Services.AddSingleton(emailConfig);
+//builder.Services.AddSingleton(emailConfig);
 
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+//builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.Configure<FormOptions>(o => {
     o.ValueLengthLimit = int.MaxValue;
@@ -73,6 +74,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("default"))
 );
+
+
+builder.Services.AddScoped<IEmailService, crm_software_back.Services.EmailService.EmailService>();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IEnduserService, EnduserService>();

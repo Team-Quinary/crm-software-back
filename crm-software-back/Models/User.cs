@@ -15,9 +15,10 @@ namespace crm_software_back.Models
         public string Username { get; set; } = string.Empty;
 
         [Column(TypeName = "nvarchar(30)")]
-        public string Password { get; set; } = string.Empty;
+        public string? Password { get; set; }
+        //public string Password { get; set; } = string.Empty;
 
-        [Required, Column(TypeName = "nvarchar(50)")]
+        //[Required, Column(TypeName = "nvarchar(50)")]
         public string FirstName { get; set; } = string.Empty;
 
         [Column(TypeName = "nvarchar(30)")]
@@ -31,5 +32,10 @@ namespace crm_software_back.Models
 
         [Column(TypeName = "nvarchar(30)")]
         public string ProfilePic { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
+        public string? ResetPasswordToken { get; set; }
+        public DateTime ResetPasswordExpiry { get; set; }
     }
 }
+
