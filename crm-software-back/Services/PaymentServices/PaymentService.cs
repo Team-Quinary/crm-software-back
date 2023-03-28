@@ -1,4 +1,5 @@
 ﻿using crm_software_back.Data;
+using crm_software_back.DTOs;
 using crm_software_back.Models;
 using Microsoft.EntityFrameworkCore;
 using static crm_software_back.Controllers.PaymentController;
@@ -28,20 +29,25 @@ namespace crm_software_back.Services.PaymentServices
 
         public async Task<List<Payment>?> getPayments()
         {
-            var payments = await _context.Payments.ToListAsync();
+            var payments = await _context.Payments
+                .Include(p => p.Project)
+                .ThenInclude(p => (p != null) ? p.Customer : null)
+                .ToListAsync();
 
-            if (payments != null)
-            {
-                var newPayments = new List<Payment>();
-                foreach (Payment payment in payments)
-                {
-                    payment.Project = await _context.Projects.FindAsync(payment.ProjectId);
+            //if (payments != null)
+            //{
+            //    var newPayments = new List<Payment>();
+            //    foreach (Payment payment in payments)
+            //    {
+            //        payment.Project = await _context.Projects.FindAsync(payment.ProjectId);
+
+            //        payment.Project.Customer = _context.Customers.Find(payment?.Project?.CustomerId);
                     
-                    newPayments.Add(payment);
-                }
+            //        newPayments.Add(payment);
+            //    }
 
-                return newPayments;
-            }
+            //    return newPayments;
+            //}
 
             return payments;
         }
@@ -67,6 +73,54 @@ namespace crm_software_back.Services.PaymentServices
 
             return payment;
         }
+
+        public async Task<DTOPaymentData?> getPaymentData(int projectId)
+        {
+            var project = await _context.Projects.FindAsync(projectId);
+
+            if (project == null)
+            {
+                return null;
+            }
+
+            var payments = await _context.Payments.Where(payment => payment.ProjectId == projectId).ToListAsync();
+
+            var totalPaid = 0;
+            var count = 0;
+            var lastPaymentDate = new DateTime();
+            var lastPayment = 0;
+
+            if (payments != null)
+            {
+                foreach (var payment in payments)
+                {
+                    totalPaid += payment.Amount;
+                    count++;
+                    if (lastPaymentDate < payment.Date)
+                    {
+                        lastPaymentDate = payment.Date;
+                        lastPayment = payment.Amount;
+                    }
+                }
+            }
+
+            //var now = DateTime.Now;
+            //var elapsedMonths = (now.Year - project.StartDate.Year) * 12 + now.Month - project.StartDate.Month;
+
+            var paymentDetails = new DTOPaymentData()
+            {
+                TotalFee = project.Fee,
+                Installments = project.Installments,
+                PaybleAmount = project.Fee - totalPaid,
+                NextInstallment = project.Fee / project.Installments,
+                DueDate = project.StartDate.AddMonths(count+1),
+                LastPayment = lastPayment,
+                LastPaymentDate = lastPaymentDate
+            };
+
+            return paymentDetails;
+        }
+
 
         public int CalculateOrderAmount(Item[] items)
         {
