@@ -5,6 +5,7 @@ using System.Text.Json;
 using Stripe;
 using crm_software_back.Models;
 using crm_software_back.Services.PaymentServices;
+using crm_software_back.DTOs;
 
 namespace crm_software_back.Controllers
 {
@@ -53,6 +54,14 @@ namespace crm_software_back.Controllers
 
             // Return the JSON response.
             return Content(jsonResponse, "application/json");
+        }
+
+        [HttpPost("Project/{projectId}")]
+        public async Task<ActionResult<DTOPaymentData?>> getPaymentData(int projectId)
+        {
+            var result = await _paymentService.getPaymentData(projectId);
+
+            return Ok(result);
         }
 
         [HttpGet("{paymentId}")]
