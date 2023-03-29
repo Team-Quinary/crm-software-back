@@ -32,10 +32,6 @@ namespace crm_software_back.Models
 
         [Column(TypeName = "nvarchar(30)")]
         public string ProfilePic { get; set; } = string.Empty;
-        public string? RefreshToken { get; set; }
-        public DateTime RefreshTokenExpiryTime { get; set; }
-        public string? ResetPasswordToken { get; set; }
-        public DateTime ResetPasswordExpiry { get; set; }
     }
 }
 

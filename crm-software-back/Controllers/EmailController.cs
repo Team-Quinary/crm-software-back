@@ -13,40 +13,38 @@ namespace crm_software_back.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        
+        private readonly IEmailSender _emailSender;
 
-        //private readonly IEmailSender _emailSender;
+        public EmailController(IEmailSender emailSender)
+        {
+            _emailSender = emailSender;
+        }
 
-        //public EmailController(IEmailSender emailSender)
-        //{
-        //    _emailSender = emailSender;
-        //}
+        [HttpPost]
+        public async Task<IActionResult> PostAsync([FromForm] DTOMessage dtoMessage)
+        {
+            if (dtoMessage == null)
+            {
+                return BadRequest("No file selected");
+            }
 
-        //[HttpPost]
-        //public async Task<IActionResult> PostAsync([FromForm] DTOMessage dtoMessage)
-        //{
-        //    if (dtoMessage == null)
-        //    {
-        //        return BadRequest("No file selected");
-        //    }
+            List<ToPair>? toPairList = new List<ToPair>();
 
-        //    List<ToPair>? toPairList = new List<ToPair>();
+            foreach (var toPair in dtoMessage.To)
+            {
+                toPairList.Add(JsonSerializer.Deserialize<ToPair>(toPair));
+            }
 
-        //    foreach(var toPair in dtoMessage.To)
-        //    {
-        //        toPairList.Add(JsonSerializer.Deserialize<ToPair>(toPair));
-        //    }
+            var message = new Message(
+                toPairList,
+                dtoMessage.Subject,
+                dtoMessage.Content,
+                dtoMessage.Attachments
+            );
 
-        //    var message = new Message(
-        //        toPairList,
-        //        dtoMessage.Subject,
-        //        dtoMessage.Content,
-        //        dtoMessage.Attachments
-        //    );
+            await _emailSender.SendEmailAsync(message);
 
-        //    await _emailSender.SendEmailAsync(message);
-
-        //    return Ok("File uploaded successfully");
-        //}
+            return Ok("File uploaded successfully");
+        }
     }
 }

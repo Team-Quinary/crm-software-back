@@ -1,4 +1,4 @@
-﻿namespace crm_software_back.Models
+﻿namespace EmailService
 {
     public static class EmailBody
     {

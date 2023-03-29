@@ -10,5 +10,7 @@ namespace EmailService
     public interface IEmailSender
     {
         Task SendEmailAsync(Message message);
+
+        void SendEmail(string email, string username, string firstName);
     }
 }

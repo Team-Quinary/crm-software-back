@@ -105,112 +105,77 @@ namespace crm_software_back.Controllers
             return Ok(user);
         }
 
-        [HttpPost("send-reset-email/{email}")]
-        public async Task<IActionResult> SendEmail(string email)
-        {
-            var user = await _dataContext.Users.FirstOrDefaultAsync(a => a.Email == email);
-            if (user is null)
-            {
-                return NotFound(new
-                {
-                    StatusCode = 404,
-                    Message = "Email doesn't exist."
-                });
-            }
-            var tokenBytes = RandomNumberGenerator.GetBytes(64);
-            var emailToken = Convert.ToBase64String(tokenBytes);
-            user.ResetPasswordToken = emailToken;
-            user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
-            var firstName = user.FirstName;
-            string from = _configuration["EmailSettings:From"];
-            var emailModel = new EmailModel(email, "Reset Password!", EmailBody.EmailStringBody1(email, emailToken, firstName));
-            _emailService.SendEmail(emailModel);
-            _dataContext.Entry(user).State = EntityState.Modified;
-            await _dataContext.SaveChangesAsync();
-            return Ok(new
-            {
-                StatusCode = 200,
-                Message = "Email sent!"
-            });
-        }
+        //[HttpPost("send-reset-email/{email}")]
+        //public async Task<IActionResult> SendEmail(string email)
+        //{
+        //    var user = await _dataContext.Users.FirstOrDefaultAsync(a => a.Email == email);
+        //    if (user is null)
+        //    {
+        //        return NotFound(new
+        //        {
+        //            StatusCode = 404,
+        //            Message = "Email doesn't exist."
+        //        });
+        //    }
+        //    var tokenBytes = RandomNumberGenerator.GetBytes(64);
+        //    var emailToken = Convert.ToBase64String(tokenBytes);
+        //    user.ResetPasswordToken = emailToken;
+        //    user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
+        //    var firstName = user.FirstName;
+        //    string from = _configuration["EmailSettings:From"];
+        //    var emailModel = new EmailModel(email, "Reset Password!", EmailBody.EmailStringBody1(email, emailToken, firstName));
+        //    _emailService.SendEmail(emailModel);
+        //    _dataContext.Entry(user).State = EntityState.Modified;
+        //    await _dataContext.SaveChangesAsync();
+        //    return Ok(new
+        //    {
+        //        StatusCode = 200,
+        //        Message = "Email sent!"
+        //    });
+        //}
 
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
-        {
-            var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
-            var user = await _dataContext.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
-            if (user is null)
-            {
-                return NotFound(new
-                {
-                    StatusCode = 404,
-                    Message = "Email doesn't exist."
-                });
-            }
-            var tokenCode = user.ResetPasswordToken;
-            DateTime emailTokenExpiry = user.ResetPasswordExpiry;
-            if (tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
-            {
-                return BadRequest(new
-                {
-                    StatusCode = 400,
-                    Message = "Invalid Reset Link"
-                });
-            }
+        //[HttpPost("reset-password")]
+        //public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        //{
+        //    var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
+        //    var user = await _dataContext.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
+        //    if (user is null)
+        //    {
+        //        return NotFound(new
+        //        {
+        //            StatusCode = 404,
+        //            Message = "Email doesn't exist."
+        //        });
+        //    }
+        //    var tokenCode = user.ResetPasswordToken;
+        //    DateTime emailTokenExpiry = user.ResetPasswordExpiry;
+        //    if (tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
+        //    {
+        //        return BadRequest(new
+        //        {
+        //            StatusCode = 400,
+        //            Message = "Invalid Reset Link"
+        //        });
+        //    }
 
-            if (resetPasswordDto.NewPassword != resetPasswordDto.ConfirmPassword)
-            {
-                return BadRequest(new
-                {
-                    StatusCode = 400,
-                    Message = "New password and confirm password do not match."
-                });
-            }
+        //    if (resetPasswordDto.NewPassword != resetPasswordDto.ConfirmPassword)
+        //    {
+        //        return BadRequest(new
+        //        {
+        //            StatusCode = 400,
+        //            Message = "New password and confirm password do not match."
+        //        });
+        //    }
 
-            user.Password = resetPasswordDto.NewPassword;
-            _dataContext.Entry(user).State = EntityState.Modified;
-            await _dataContext.SaveChangesAsync();
-            return Ok(new
-            {
-                StatusCode = 200,
-                Message = "Password Reset Successfully."
-            });
-        }
-
-        [HttpPost("send-email-informing-password-and-username")]
-        public async Task<IActionResult> SendEmails(string email)
-        {
-            var user = await _dataContext.Users.FirstOrDefaultAsync(a => a.Email == email);
-            if (user == null)
-            {
-                return NotFound(new
-                {
-                    StatusCode = 404,
-                    Message = "Email doesn't exist."
-                });
-            }
-            var password = GeneratePassword();
-            var username = user.Username;
-            var firstName = user.FirstName;
-            string from = _configuration["EmailSettings:From"];
-            var emailModel = new EmailModel(email, "Your username and password", EmailBody.EmailStringBody2(email, username, password, firstName));
-            _emailService.SendEmail(emailModel);
-            _dataContext.Entry(user).State = EntityState.Modified;
-            await _dataContext.SaveChangesAsync();
-           
-            return Ok(new
-            {
-                StatusCode = 200,
-                Message = "Email sent!"
-            });
-        }
-
-        private string GeneratePassword()
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var random = new Random();
-            return new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-        }
+        //    user.Password = resetPasswordDto.NewPassword;
+        //    _dataContext.Entry(user).State = EntityState.Modified;
+        //    await _dataContext.SaveChangesAsync();
+        //    return Ok(new
+        //    {
+        //        StatusCode = 200,
+        //        Message = "Password Reset Successfully."
+        //    });
+        //}
 
         //private string HashPassword(string password)
         //{
@@ -219,41 +184,41 @@ namespace crm_software_back.Controllers
         //    return Convert.ToBase64String(hashedBytes);
         //}
 
-            //[HttpPost("Email")]
-            //public async Task<ActionResult<IFormFile>> PostAsync(IFormFile image)
-            //{
-            //    if (image == null)
-            //    {
-            //        return BadRequest("No file selected");
-            //    }
+        //[HttpPost("Email")]
+        //public async Task<ActionResult<IFormFile>> PostAsync(IFormFile image)
+        //{
+        //    if (image == null)
+        //    {
+        //        return BadRequest("No file selected");
+        //    }
 
-            //    byte[] fileBytes;
+        //    byte[] fileBytes;
 
-            //    using (var ms = new MemoryStream())
-            //    {
-            //        image.CopyTo(ms);
-            //        fileBytes = ms.ToArray();
-            //    }
+        //    using (var ms = new MemoryStream())
+        //    {
+        //        image.CopyTo(ms);
+        //        fileBytes = ms.ToArray();
+        //    }
 
-            //    var filePath = "./ProfilePics/image.png";
+        //    var filePath = "./ProfilePics/image.png";
 
-            //    using (var stream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        await stream.WriteAsync(fileBytes);
-            //    }
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await stream.WriteAsync(fileBytes);
+        //    }
 
-            //    //
+        //    //
 
-            //    if (!System.IO.File.Exists(filePath))
-            //    {
-            //        return NotFound("Not found");
-            //    }
+        //    if (!System.IO.File.Exists(filePath))
+        //    {
+        //        return NotFound("Not found");
+        //    }
 
-            //    var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+        //    var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
-            //    var fileExtension = Path.GetExtension(filePath);
+        //    var fileExtension = Path.GetExtension(filePath);
 
-            //    return new FileStreamResult(fileStream, $"image/{fileExtension[1..]}");
-            //}
-        }
+        //    return new FileStreamResult(fileStream, $"image/{fileExtension[1..]}");
+        //}
+    }
 }
