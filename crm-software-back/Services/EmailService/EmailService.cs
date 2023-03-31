@@ -35,7 +35,7 @@ namespace crm_software_back.Services.EmailService
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    Console.WriteLine(ex.Message);
                 }
                 finally
                 {

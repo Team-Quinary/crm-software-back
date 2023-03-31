@@ -15,7 +15,7 @@ namespace crm_software_back.Models
         public Project? Project { get; set; }
 
         [Required]
-        public int Amount { get; set; }
+        public double Amount { get; set; }
 
         public DateTime Date { get; set; }
 
