@@ -1,6 +1,7 @@
 ﻿using crm_software_back.Data;
 using crm_software_back.DTOs;
 using crm_software_back.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using static crm_software_back.Controllers.PaymentController;
 
@@ -34,41 +35,46 @@ namespace crm_software_back.Services.PaymentServices
                 .ThenInclude(p => (p != null) ? p.Customer : null)
                 .ToListAsync();
 
-            //if (payments != null)
-            //{
-            //    var newPayments = new List<Payment>();
-            //    foreach (Payment payment in payments)
-            //    {
-            //        payment.Project = await _context.Projects.FindAsync(payment.ProjectId);
-
-            //        payment.Project.Customer = _context.Customers.Find(payment?.Project?.CustomerId);
-                    
-            //        newPayments.Add(payment);
-            //    }
-
-            //    return newPayments;
-            //}
-
             return payments;
         }
 
-        public async Task<Payment?> postPayment(Payment newPayment)
+        public async Task<Payment?> postPayment(DTOPayment newPayment)
         {
-            var payment = await _context.Payments.Where(payment => payment.PaymentId == newPayment.PaymentId).FirstOrDefaultAsync();
+            var payment = await _context.Payments.Where(payment => payment.StripeId == newPayment.StripeId).FirstOrDefaultAsync();
 
-            if (payment != null)
+            if (payment != null || newPayment.ProjectId == 0 || newPayment.StripeId == null)
             {
                 return null;
             }
 
-            _context.Payments.Add(newPayment);
+            var paymentData = await getPaymentData(newPayment.ProjectId);
+
+            if (paymentData == null)
+            {
+                return null;
+            }
+
+            var paid = new Payment
+            {
+                ProjectId = newPayment.ProjectId,
+                Amount = paymentData.NextInstallment,
+                Date = DateTime.Now,
+                StripeId = newPayment.StripeId
+            };
+
+            _context.Payments.Add(paid);
             await _context.SaveChangesAsync();
 
-            payment = await _context.Payments.Where(payment => payment.PaymentId == newPayment.PaymentId).FirstOrDefaultAsync();
+            payment = await _context.Payments.Where(payment => payment.StripeId == newPayment.StripeId).FirstOrDefaultAsync();
 
             if (payment != null)
             {
                 payment.Project = await _context.Projects.FindAsync(payment.ProjectId);
+                
+                if (payment.Project != null)
+                {
+                    payment.Project.Customer = await _context.Customers.FindAsync(payment.Project?.CustomerId);
+                }
             }
 
             return payment;
@@ -85,10 +91,10 @@ namespace crm_software_back.Services.PaymentServices
 
             var payments = await _context.Payments.Where(payment => payment.ProjectId == projectId).ToListAsync();
 
-            var totalPaid = 0;
+            double totalPaid = 0;
             var count = 0;
             var lastPaymentDate = new DateTime();
-            var lastPayment = 0;
+            double lastPayment = 0;
 
             if (payments != null)
             {
@@ -104,30 +110,21 @@ namespace crm_software_back.Services.PaymentServices
                 }
             }
 
-            //var now = DateTime.Now;
-            //var elapsedMonths = (now.Year - project.StartDate.Year) * 12 + now.Month - project.StartDate.Month;
+            double next = ((double) project.Fee) / project.Installments;
+            double payable = project.Fee - totalPaid;
 
             var paymentDetails = new DTOPaymentData()
             {
                 TotalFee = project.Fee,
                 Installments = project.Installments,
-                PaybleAmount = project.Fee - totalPaid,
-                NextInstallment = project.Fee / project.Installments,
+                PaybleAmount = payable,
+                NextInstallment = (next > payable) ? Math.Round(payable, 2) : Math.Round(next, 2),
                 DueDate = project.StartDate.AddMonths(count+1),
-                LastPayment = lastPayment,
+                LastPayment = Math.Round(lastPayment, 2),
                 LastPaymentDate = lastPaymentDate
             };
 
             return paymentDetails;
-        }
-
-
-        public int CalculateOrderAmount(Item[] items)
-        {
-            // Replace this constant with a calculation of the order's amount
-            // Calculate the order total on the server to prevent
-            // people from directly manipulating the amount on the client
-            return 5000;
         }
     }
 }

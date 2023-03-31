@@ -21,13 +21,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//var emailConfig = builder.Configuration
-//    .GetSection("EmailConfiguration")
-//    .Get<EmailConfiguration>();
+var emailConfig = builder.Configuration
+    .GetSection("EmailConfiguration")
+    .Get<EmailConfiguration>();
 
-//builder.Services.AddSingleton(emailConfig);
+builder.Services.AddSingleton(emailConfig);
 
-//builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.Configure<FormOptions>(o => {
     o.ValueLengthLimit = int.MaxValue;
@@ -36,10 +36,6 @@ builder.Services.Configure<FormOptions>(o => {
 });
 
 builder.Services.AddControllers();
-//    .AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-//});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

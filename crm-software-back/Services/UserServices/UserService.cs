@@ -2,6 +2,8 @@
 using crm_software_back.DTOs;
 using crm_software_back.Models;
 using crm_software_back.Services.LoginUserServices;
+using EmailService;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace crm_software_back.Services.UserServices
@@ -10,11 +12,13 @@ namespace crm_software_back.Services.UserServices
     {
         private readonly DataContext _context;
         private readonly ILoginUserService _loginUserService;
+        private readonly IEmailSender _emailSender;
 
-        public UserService(DataContext context, ILoginUserService loginUserService)
+        public UserService(DataContext context, ILoginUserService loginUserService, IEmailSender emailSender)
         {
             _context = context;
             _loginUserService = loginUserService;
+            _emailSender = emailSender;
         }
 
         public async Task<User?> getUser(int userId)
@@ -52,6 +56,8 @@ namespace crm_software_back.Services.UserServices
             };
 
             await _loginUserService.postLoginUser(newDTOuser);
+
+            _emailSender.SendEmail(newUser.Email, newUser.Username, newUser.FirstName);
 
             return await _context.Users.Where(user => user.Email.Equals(newUser.Email)).FirstOrDefaultAsync();
         }

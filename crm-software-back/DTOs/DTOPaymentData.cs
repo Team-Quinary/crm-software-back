@@ -6,13 +6,13 @@
 
         public int Installments { get; set; }
 
-        public int PaybleAmount { get; set; }
+        public double PaybleAmount { get; set; }
 
-        public int NextInstallment { get; set; }
+        public double NextInstallment { get; set; }
 
         public DateTime DueDate { get; set; }
 
-        public int LastPayment { get; set; }
+        public double LastPayment { get; set; }
 
         public DateTime LastPaymentDate { get; set; }
     }
