@@ -15,7 +15,6 @@ using System.Text;
 using crm_software_back.Services.EnduserServices;
 using Stripe;
 using crm_software_back.Services.PaymentServices;
-using crm_software_back.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,9 +69,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("default"))
 );
-
-
-builder.Services.AddScoped<IEmailService, crm_software_back.Services.EmailService.EmailService>();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IEnduserService, EnduserService>();
