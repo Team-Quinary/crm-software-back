@@ -16,6 +16,9 @@ using crm_software_back.Services.EnduserServices;
 using Stripe;
 using crm_software_back.Services.PaymentServices;
 using crm_software_back.Services.EmailService;
+using crm_software_back.Services.FeedbackFormServices;
+using crm_software_back.Models;
+using crm_software_back.Services.FormServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,7 +83,7 @@ builder.Services.AddScoped<ILoginUserService, LoginUserService>();
 builder.Services.AddScoped<ICustomerService, crm_software_back.Services.CustomerServices.CustomerService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
-
+builder.Services.AddScoped<IFeedackFormServices, FeedbackFormServices>(); 
 var app = builder.Build();
 
 app.UseCors(option =>

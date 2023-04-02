@@ -23,8 +23,12 @@ namespace crm_software_back.Data
         public DbSet<Enduser> Endusers { get; set; }
 
         public DbSet<Payment> Payments { get; set; }
+
         public DbSet<FeedbackForm> FeedbackForms { get; set; }
-        public DbSet<FeedbackFormQuestions> FormQuestions { get; set; }
+
+        public DbSet<FeedbackFormQuestion> FormQuestions { get; set; }
+
+        public DbSet<Answer> Answers { get; set; }
 
 
     }
