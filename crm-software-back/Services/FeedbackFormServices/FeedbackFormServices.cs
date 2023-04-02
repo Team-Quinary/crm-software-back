@@ -1,10 +1,11 @@
 ﻿using crm_software_back.Data;
 using crm_software_back.Models;
+using crm_software_back.Services.FeedbackFormServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace crm_software_back.Services.FormServices
 {
-    public class FeedbackFormServices
+    public class FeedbackFormServices : IFeedackFormServices
     {
         private readonly DataContext _context;
 
