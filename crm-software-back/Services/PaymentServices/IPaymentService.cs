@@ -1,4 +1,5 @@
-﻿using crm_software_back.Models;
+﻿using crm_software_back.DTOs;
+using crm_software_back.Models;
 using static crm_software_back.Controllers.PaymentController;
 
 namespace crm_software_back.Services.PaymentServices
@@ -7,10 +8,10 @@ namespace crm_software_back.Services.PaymentServices
     {
         public Task<Payment?> getPayment(int paymentId);
         public Task<List<Payment>?> getPayments();
-        public Task<Payment?> postPayment(Payment newPayment);
+        public Task<Payment?> postPayment(DTOPayment newPayment);
         //public Task<Project?> putProject(int projectId, Project newProject);
         //public Task<Project?> deleteProject(int projectId);
 
-        int CalculateOrderAmount(Item[] items);
+        Task<DTOPaymentData?> getPaymentData(int projectId);
     }
 }

@@ -9,19 +9,13 @@ namespace crm_software_back.Models
         [Key]
         public int PaymentId { get; set; }
 
-        //[Required, ForeignKey("Project")]
-        //public int ProjectId { get; set; }
-
-        //[JsonIgnore]
-        //public Project Project { get; set; }
-
         public int? ProjectId { get; set; }
 
         [ForeignKey("ProjectId")]
         public Project? Project { get; set; }
 
         [Required]
-        public int Amount { get; set; }
+        public double Amount { get; set; }
 
         public DateTime Date { get; set; }
 

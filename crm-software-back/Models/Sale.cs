@@ -14,13 +14,11 @@ namespace crm_software_back.Models
         [ForeignKey("Project")]
         public int ProjectId { get; set; }
 
-        [JsonIgnore]
         public Project? Project { get; set; }
 
         [ForeignKey("Enduser")]
         public int EnduserId { get; set; }
 
-        [JsonIgnore]
         public Enduser? Enduser { get; set; }
     }
 }

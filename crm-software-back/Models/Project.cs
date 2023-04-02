@@ -30,13 +30,11 @@ namespace crm_software_back.Models
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
 
-        [JsonIgnore]
         public Customer? Customer { get; set; }
 
         [ForeignKey("User")]
         public int TechLeadId { get; set; }
 
-        [JsonIgnore]
         public User? TechLead { get; set; }
     }
 }

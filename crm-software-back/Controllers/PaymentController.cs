@@ -5,6 +5,7 @@ using System.Text.Json;
 using Stripe;
 using crm_software_back.Models;
 using crm_software_back.Services.PaymentServices;
+using crm_software_back.DTOs;
 
 namespace crm_software_back.Controllers
 {
@@ -19,25 +20,20 @@ namespace crm_software_back.Controllers
             _paymentService = paymentService;
         }
 
-        public class Item
+        [HttpPost("Stripe/{projectId}")]
+        public async Task<ActionResult> Create(int projectId)
         {
-            [JsonProperty("id")]
-            public string Id { get; set; } = string.Empty;
-        }
+            var paymentData = await _paymentService.getPaymentData(projectId);
 
-        public class PaymentIntentCreateRequest
-        {
-            [JsonProperty("items")]
-            public Item[] Items { get; set; }
-        }
+            if (paymentData == null)
+            {
+                return NotFound();
+            }
 
-        [HttpPost("Stripe")]
-        public ActionResult Create(PaymentIntentCreateRequest request)
-        {
             var paymentIntentService = new PaymentIntentService();
             var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
             {
-                Amount = _paymentService.CalculateOrderAmount(request.Items),
+                Amount = (int) (paymentData.NextInstallment*100),
                 Currency = "usd",
                 AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
                 {
@@ -45,14 +41,18 @@ namespace crm_software_back.Controllers
                 },
             });
 
-            //return Json(new { clientSecret = paymentIntent.ClientSecret });
-
-            // Serialize the client secret into a JSON object with a "clientSecret" property.
             var responseObject = new { clientSecret = paymentIntent.ClientSecret };
             var jsonResponse = System.Text.Json.JsonSerializer.Serialize(responseObject);
 
-            // Return the JSON response.
             return Content(jsonResponse, "application/json");
+        }
+
+        [HttpPost("Project/{projectId}")]
+        public async Task<ActionResult<DTOPaymentData?>> getPaymentData(int projectId)
+        {
+            var result = await _paymentService.getPaymentData(projectId);
+
+            return Ok(result);
         }
 
         [HttpGet("{paymentId}")]
@@ -82,7 +82,7 @@ namespace crm_software_back.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Payment?>> postPayment(Payment newPayment)
+        public async Task<ActionResult<Payment?>> postPayment(DTOPayment newPayment)
         {
             var payment = await _paymentService.postPayment(newPayment);
 

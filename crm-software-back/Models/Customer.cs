@@ -9,7 +9,6 @@ namespace crm_software_back.Models
         [Key, ForeignKey("User")]
         public int UserId { get; set; }
 
-        [JsonIgnore]
         public User? User { get; set; }
 
         [Required, Column(TypeName = "nvarchar(50)")]

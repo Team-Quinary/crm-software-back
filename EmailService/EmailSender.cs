@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using EmailService;
 
 namespace EmailService
 {
@@ -18,6 +19,34 @@ namespace EmailService
         public EmailSender(EmailConfiguration emailConfig)
         {
             _emailConfig = emailConfig;
+        }
+
+        private string GeneratePassword()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, 12).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public async void SendEmail(string email, string username, string firstName)
+        {
+            var toList = new List<ToPair>();
+            var to = new ToPair
+            {
+                Name = firstName,
+                Address = email
+            };
+
+            toList.Add(to);
+
+            var message = new Message(
+                toList,
+                "Welcome to our CRM software ...!",
+                EmailBody.NewUserEmail(username, GeneratePassword(), firstName),
+                null
+            );
+
+            await SendEmailAsync(message);
         }
 
         public async Task SendEmailAsync(Message message)

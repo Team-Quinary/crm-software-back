@@ -1,7 +1,10 @@
 ﻿using EmailService;
 using MailKit;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using System.Text.Json;
 
 namespace crm_software_back.Controllers
@@ -27,7 +30,7 @@ namespace crm_software_back.Controllers
 
             List<ToPair>? toPairList = new List<ToPair>();
 
-            foreach(var toPair in dtoMessage.To)
+            foreach (var toPair in dtoMessage.To)
             {
                 toPairList.Add(JsonSerializer.Deserialize<ToPair>(toPair));
             }
