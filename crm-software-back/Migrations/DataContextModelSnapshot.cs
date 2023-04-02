@@ -22,6 +22,37 @@ namespace crm_back_test.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("crm_software_back.Models.Answer", b =>
+                {
+                    b.Property<int>("AnswerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnswerId"));
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("QuesAnswer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AnswerId");
+
+                    b.HasIndex("FormId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answers");
+                });
+
             modelBuilder.Entity("crm_software_back.Models.Customer", b =>
                 {
                     b.Property<int>("UserId")
@@ -51,6 +82,51 @@ namespace crm_back_test.Migrations
                     b.HasKey("EnduserId");
 
                     b.ToTable("Endusers");
+                });
+
+            modelBuilder.Entity("crm_software_back.Models.FeedbackForm", b =>
+                {
+                    b.Property<int>("FormId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FormId"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FormId");
+
+                    b.ToTable("FeedbackForms");
+                });
+
+            modelBuilder.Entity("crm_software_back.Models.FeedbackFormQuestion", b =>
+                {
+                    b.Property<int>("QuestionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QuestionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("QuestionId");
+
+                    b.HasIndex("FormId");
+
+                    b.ToTable("FormQuestions");
                 });
 
             modelBuilder.Entity("crm_software_back.Models.LoginUser", b =>
@@ -214,6 +290,33 @@ namespace crm_back_test.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("crm_software_back.Models.Answer", b =>
+                {
+                    b.HasOne("crm_software_back.Models.FeedbackForm", "FeedbackForm")
+                        .WithMany()
+                        .HasForeignKey("FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("crm_software_back.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("crm_software_back.Models.FeedbackFormQuestion", "FeedbackFormQuestion")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FeedbackForm");
+
+                    b.Navigation("FeedbackFormQuestion");
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("crm_software_back.Models.Customer", b =>
                 {
                     b.HasOne("crm_software_back.Models.User", "User")
@@ -223,6 +326,17 @@ namespace crm_back_test.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("crm_software_back.Models.FeedbackFormQuestion", b =>
+                {
+                    b.HasOne("crm_software_back.Models.FeedbackForm", "FeedbackForm")
+                        .WithMany()
+                        .HasForeignKey("FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FeedbackForm");
                 });
 
             modelBuilder.Entity("crm_software_back.Models.LoginUser", b =>

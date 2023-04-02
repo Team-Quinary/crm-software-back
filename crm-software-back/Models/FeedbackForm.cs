@@ -1,9 +1,14 @@
-﻿namespace crm_software_back.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace crm_software_back.Models
 {
     public class FeedbackForm
     {
-        public int FormID { get; set; }
-        public string FormName { get; set; }
-        public string FormDesc { get; set; }
+        [Key]
+        public int FormId { get; set; }
+
+        public string? Name { get; set; }
+
+        public string? Description { get; set; }
     }
 }

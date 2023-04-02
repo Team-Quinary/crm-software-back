@@ -15,7 +15,7 @@ namespace crm_software_back.Services.FormServices
         }
         public async Task<FeedbackForm?> PostFeedbackForm(FeedbackForm newFeedbackForm)
         {
-            var feedback = await _context.FeedbackForms.Where(feedback => feedback.FormName.Equals(newFeedbackForm.FormName)).FirstOrDefaultAsync();
+            var feedback = await _context.FeedbackForms.Where(feedback => feedback.Name.Equals(newFeedbackForm.Name)).FirstOrDefaultAsync();
 
             if (feedback != null)
             {
@@ -25,7 +25,7 @@ namespace crm_software_back.Services.FormServices
             _context.FeedbackForms.Add(newFeedbackForm);
             await _context.SaveChangesAsync();
 
-            return await _context.FeedbackForms.Where(feedback => feedback.FormName.Equals(newFeedbackForm.FormName)).FirstOrDefaultAsync();
+            return await _context.FeedbackForms.Where(feedback => feedback.Name.Equals(newFeedbackForm.Name)).FirstOrDefaultAsync();
         }
         public async Task<List<FeedbackForm>?> GetFeedbackForms()
         {

@@ -11,18 +11,18 @@ namespace crm_software_back.Models
         [ForeignKey("FeedbackForm")]
         public int FormId { get; set; }
 
-        public FeedbackForm FeedbackForm { get; set; }
+        public FeedbackForm? FeedbackForm { get; set; }
 
         [ForeignKey("FeedbackFormQuestion")]
         public int QuestionId { get; set; }
 
-        public FeedbackFormQuestion FeedbackFormQuestion { get; set; }
+        public FeedbackFormQuestion? FeedbackFormQuestion { get; set; }
 
         [ForeignKey("Project")]
         public int ProjectId { get; set; }
 
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
 
-        public string QuesAnswer { get; set; }
+        public string? QuesAnswer { get; set; }
     }
 }
