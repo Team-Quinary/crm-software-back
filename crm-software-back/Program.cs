@@ -15,6 +15,10 @@ using System.Text;
 using crm_software_back.Services.EnduserServices;
 using Stripe;
 using crm_software_back.Services.PaymentServices;
+using crm_software_back.Services.EmailService;
+using crm_software_back.Services.FeedbackFormServices;
+using crm_software_back.Models;
+using crm_software_back.Services.FormServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,7 +80,7 @@ builder.Services.AddScoped<ILoginUserService, LoginUserService>();
 builder.Services.AddScoped<ICustomerService, crm_software_back.Services.CustomerServices.CustomerService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
-
+builder.Services.AddScoped<IFeedackFormServices, FeedbackFormServices>(); 
 var app = builder.Build();
 
 app.UseCors(option =>
@@ -93,7 +97,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // This is a public sample test API key.
-// Don’t submit any personally identifiable information in requests made with this key.
+// Donâ€™t submit any personally identifiable information in requests made with this key.
 // Sign in to see your own test API key embedded in code samples.
 StripeConfiguration.ApiKey = "sk_test_51MUsoZAohmapaowNwXOofY6UIN4vjZTOzYUFfXo2fFlqUubK7NeTQfK82lWusMoE3SiZxQLDsWt8nkAt85yFp0TO00vtbW04Lb";
 
