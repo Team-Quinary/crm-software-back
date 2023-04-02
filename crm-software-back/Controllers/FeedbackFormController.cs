@@ -2,7 +2,6 @@
 using crm_software_back.Services.CustomerServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-//using crm_software_back.Models;
 using crm_software_back.Services.FeedbackFormServices;
 using Stripe;
 using Stripe.TestHelpers;
@@ -38,7 +37,7 @@ namespace crm_software_back.Controllers
 
             if (feedback == null)
             {
-                return NotFound("Customers list is Empty..!");
+                return NotFound("Form list is Empty..!");
             }
 
             return Ok(feedback);
