@@ -74,9 +74,6 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("default"))
 );
 
-
-builder.Services.AddScoped<IEmailService, crm_software_back.Services.EmailService.EmailService>();
-
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IEnduserService, EnduserService>();
 builder.Services.AddScoped<ILoginUserService, LoginUserService>();
@@ -100,7 +97,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // This is a public sample test API key.
-// Don’t submit any personally identifiable information in requests made with this key.
+// Donâ€™t submit any personally identifiable information in requests made with this key.
 // Sign in to see your own test API key embedded in code samples.
 StripeConfiguration.ApiKey = "sk_test_51MUsoZAohmapaowNwXOofY6UIN4vjZTOzYUFfXo2fFlqUubK7NeTQfK82lWusMoE3SiZxQLDsWt8nkAt85yFp0TO00vtbW04Lb";
 

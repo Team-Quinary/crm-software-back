@@ -13,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 using MimeKit;
 using System.Security.Cryptography;
 using crm_software_back.Services.UserServices;
-using crm_software_back.Services.EmailService;
 using BCrypt.Net;
 using System.Net.Mail;
 using System.Runtime.Intrinsics.Arm;
@@ -30,14 +29,12 @@ namespace crm_software_back.Controllers
         private readonly IUserService _userService;
         private readonly DataContext _dataContext;
         private readonly IConfiguration _configuration;
-        private readonly IEmailService _emailService;
 
-        public UserController(IUserService userService, DataContext dataContext, IConfiguration configuration, IEmailService emailService)
+        public UserController(IUserService userService, DataContext dataContext, IConfiguration configuration)
         {
             _userService = userService;
             _dataContext = dataContext;
             _configuration = configuration;
-            _emailService = emailService;
         }
 
         [HttpGet("{userId}")]
@@ -104,78 +101,6 @@ namespace crm_software_back.Controllers
 
             return Ok(user);
         }
-
-        //[HttpPost("send-reset-email/{email}")]
-        //public async Task<IActionResult> SendEmail(string email)
-        //{
-        //    var user = await _dataContext.Users.FirstOrDefaultAsync(a => a.Email == email);
-        //    if (user is null)
-        //    {
-        //        return NotFound(new
-        //        {
-        //            StatusCode = 404,
-        //            Message = "Email doesn't exist."
-        //        });
-        //    }
-        //    var tokenBytes = RandomNumberGenerator.GetBytes(64);
-        //    var emailToken = Convert.ToBase64String(tokenBytes);
-        //    user.ResetPasswordToken = emailToken;
-        //    user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
-        //    var firstName = user.FirstName;
-        //    string from = _configuration["EmailSettings:From"];
-        //    var emailModel = new EmailModel(email, "Reset Password!", EmailBody.EmailStringBody1(email, emailToken, firstName));
-        //    _emailService.SendEmail(emailModel);
-        //    _dataContext.Entry(user).State = EntityState.Modified;
-        //    await _dataContext.SaveChangesAsync();
-        //    return Ok(new
-        //    {
-        //        StatusCode = 200,
-        //        Message = "Email sent!"
-        //    });
-        //}
-
-        //[HttpPost("reset-password")]
-        //public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
-        //{
-        //    var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
-        //    var user = await _dataContext.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
-        //    if (user is null)
-        //    {
-        //        return NotFound(new
-        //        {
-        //            StatusCode = 404,
-        //            Message = "Email doesn't exist."
-        //        });
-        //    }
-        //    var tokenCode = user.ResetPasswordToken;
-        //    DateTime emailTokenExpiry = user.ResetPasswordExpiry;
-        //    if (tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
-        //    {
-        //        return BadRequest(new
-        //        {
-        //            StatusCode = 400,
-        //            Message = "Invalid Reset Link"
-        //        });
-        //    }
-
-        //    if (resetPasswordDto.NewPassword != resetPasswordDto.ConfirmPassword)
-        //    {
-        //        return BadRequest(new
-        //        {
-        //            StatusCode = 400,
-        //            Message = "New password and confirm password do not match."
-        //        });
-        //    }
-
-        //    user.Password = resetPasswordDto.NewPassword;
-        //    _dataContext.Entry(user).State = EntityState.Modified;
-        //    await _dataContext.SaveChangesAsync();
-        //    return Ok(new
-        //    {
-        //        StatusCode = 200,
-        //        Message = "Password Reset Successfully."
-        //    });
-        //}
 
         //private string HashPassword(string password)
         //{
