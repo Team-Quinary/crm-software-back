@@ -59,8 +59,6 @@ namespace crm_software_back.Services.UserServices
 
             _emailSender.SendEmail(newUser.Email, newUser.Username, newUser.FirstName);
 
-            //_emailSender.SendEmail(newUser.Email, newUser.Username, newUser.FirstName);
-
             return await _context.Users.Where(user => user.Email.Equals(newUser.Email)).FirstOrDefaultAsync();
         }
 
