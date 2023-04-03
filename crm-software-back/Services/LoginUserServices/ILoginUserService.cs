@@ -10,6 +10,7 @@ namespace crm_software_back.Services.LoginUserServices
         Task<LoginUser?> putLoginUser(int userId, DTOUser newLoginUser);
         Task<LoginUser?> deleteLoginUser(int userId);
         Task<string?> login(DTOUser user);
+        Task<bool> authenticateUser(DTOUser request);
         Task<DTOLoginUser?> getTokenData();
     }
 }

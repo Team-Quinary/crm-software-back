@@ -4,6 +4,8 @@ namespace crm_software_back.DTOs
 {
     public class DTOLoginUser
     {
+        public int userId { get; set; }
+
         public string Username { get; set; } = string.Empty;
 
         public string FirstName { get; set; } = string.Empty;

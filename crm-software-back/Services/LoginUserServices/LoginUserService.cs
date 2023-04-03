@@ -127,6 +127,32 @@ namespace crm_software_back.Services.LoginUserServices
             return token;
         }
 
+        public async Task<bool> authenticateUser(DTOUser request)
+        {
+            var user = await _context.Users.Where(user =>
+                user.Username.Equals(request.Username)
+            ).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var loginUser = await _context.LoginUsers.FindAsync(user.UserId);
+
+            if (loginUser == null)
+            {
+                return false;
+            }
+
+            if (!VerifyPasswordHash(request.Password, loginUser.PasswordHash, loginUser.PasswordSalt))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<DTOLoginUser?> getTokenData()
         {
             var loginUser = new DTOLoginUser();
@@ -143,6 +169,7 @@ namespace crm_software_back.Services.LoginUserServices
             var filePath = $"./ProfilePics/{user?.ProfilePic}";
             var fileExtension = Path.GetExtension(filePath);
 
+            loginUser.userId = user.UserId;
             loginUser.FirstName = user.FirstName;
             loginUser.LastName = user.LastName;
             loginUser.Email = user.Email;
