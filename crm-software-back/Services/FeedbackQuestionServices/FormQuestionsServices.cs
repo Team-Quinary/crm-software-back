@@ -16,7 +16,24 @@ namespace crm_software_back.Services.FeedbackQuestionServices
         public async Task<FeedbackFormQuestion?> PostQuestion(FeedbackFormQuestion newQuestion)
         {
             var question = await _context.FormQuestions.Where(question => question.FormId.Equals(newQuestion.FormId)).FirstOrDefaultAsync();
-            return null;
+
+            if (question != null)
+            {
+                return null;
+            }
+
+            _context.FormQuestions.Add(newQuestion);
+            await _context.SaveChangesAsync();
+            return await _context.FormQuestions.Where(question => question.FormId.Equals(newQuestion.FormId)).FirstOrDefaultAsync();
+
+
+
+        }
+        public async Task<List<FeedbackFormQuestion>?> GetQuestion()
+        {
+            var question = await _context.FormQuestions.ToListAsync();
+
+            return question;
         }
     }
 }
