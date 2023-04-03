@@ -1,4 +1,5 @@
-﻿using crm_software_back.Models;
+﻿using crm_software_back.DTOs;
+using crm_software_back.Models;
 
 namespace crm_software_back.Services.UserServices
 {
@@ -9,5 +10,6 @@ namespace crm_software_back.Services.UserServices
         public Task<User?> postUser(User newUser);
         public Task<User?> putUser(int userId, User newUser);
         public Task<User?> deleteUser(int userId);
+        public Task<DTODashBoard> getDashboardData();
     }
 }

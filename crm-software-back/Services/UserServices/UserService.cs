@@ -5,6 +5,7 @@ using crm_software_back.Services.LoginUserServices;
 using EmailService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace crm_software_back.Services.UserServices
 {
@@ -106,6 +107,65 @@ namespace crm_software_back.Services.UserServices
             await _context.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task<DTODashBoard> getDashboardData()
+        {
+            var projectCount = await _context.Projects.CountAsync();
+            var customerCount = await _context.Customers.CountAsync();
+            var techLeadCount = await _context.Users.Where(user => user.Type == "Tech Lead").CountAsync();
+
+            var completed = await _context.Projects.Where(project => project.Status == "Completed").CountAsync();
+            var ongoing = await _context.Projects.Where(project => project.Status == "Ongoing").CountAsync();
+            var suspended = await _context.Projects.Where(project => project.Status == "Suspended").CountAsync();
+
+            var days = new List<String>();
+            var newProjects = new List<int>();
+            var payments = new List<double>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                var day = DateTime.Now.Date.AddDays(-i);
+
+                days.Insert(0, $"{day:MMMM dd}");
+
+                var newProjectCount = await _context.Projects.Where(project =>
+                    project.StartDate.Date == day.Date
+                ).CountAsync();
+
+                newProjects.Insert(0, newProjectCount);
+
+                double paymentsTotal = 0;
+
+                var paymentsOfDay = await _context.Payments.Where(payment =>
+                    payment.Date.Date == day.Date
+                ).ToListAsync();
+
+                if (!paymentsOfDay.IsNullOrEmpty())
+                {
+                    foreach (var payment in paymentsOfDay)
+                    {
+                        paymentsTotal += payment.Amount;
+                    }
+                }
+
+                payments.Insert(0, paymentsTotal);
+            }
+
+            var result = new DTODashBoard
+            {
+                ProjectCount = projectCount,
+                CustomerCount = customerCount,
+                TechLeadCount = techLeadCount,
+                Completed = completed,
+                Ongoing = ongoing,
+                Suspended = suspended,
+                LastDays = days,
+                NewProjects = newProjects,
+                Payments = payments
+            };
+
+            return result;
         }
     }
 }

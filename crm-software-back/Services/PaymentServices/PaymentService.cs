@@ -117,7 +117,7 @@ namespace crm_software_back.Services.PaymentServices
             {
                 TotalFee = project.Fee,
                 Installments = project.Installments,
-                PaybleAmount = payable,
+                PaybleAmount = Math.Round(payable, 2),
                 NextInstallment = (next > payable) ? Math.Round(payable, 2) : Math.Round(next, 2),
                 DueDate = project.StartDate.AddMonths(count+1),
                 LastPayment = Math.Round(lastPayment, 2),
