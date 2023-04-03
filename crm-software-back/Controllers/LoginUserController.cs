@@ -92,5 +92,11 @@ namespace crm_software_back.Controllers
 
             return Ok(user);
         }
+
+        [HttpPost("Authenticate")]
+        public async Task<ActionResult<bool>> authenticateUser(DTOUser request)
+        {
+            return await _loginUserService.authenticateUser(request);
+        }
     }
 }

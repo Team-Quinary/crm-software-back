@@ -79,7 +79,44 @@ namespace crm_software_back.Services.UserServices
             user.LastName = (newUser.LastName == "") ? user.LastName : newUser.LastName;
             user.ContactNo = (newUser.ContactNo == "") ? user.ContactNo : newUser.ContactNo;
             user.Email = (newUser.Email == "") ? user.Email : newUser.Email;
-            user.ProfilePic = (newUser.ProfilePic == "") ? user.ProfilePic : newUser.ProfilePic;
+
+
+
+            //var image = newUser.ProfilePic;
+
+            //if (image == null)
+            //{
+            //    return null;
+            //}
+
+            //byte[] fileBytes;
+
+            //using (var ms = new MemoryStream())
+            //{
+            //    image.CopyTo(ms);
+            //    fileBytes = ms.ToArray();
+            //}
+
+            //var filePath = $"./Gallery/{image.EventId}.png";
+
+            //using (var stream = new FileStream(filePath, FileMode.Create))
+            //{
+            //    await stream.WriteAsync(fileBytes);
+            //}
+
+            //var newImage = new Image
+            //{
+            //    EventId = image.EventId,
+            //    Path = $"{image.EventId}.png",
+            //    Description = image.Description
+            //};
+
+            //await _context.Images.AddAsync(newImage);
+            //_context.SaveChanges();
+
+
+
+            //user.ProfilePic = (newUser.ProfilePic == "") ? user.ProfilePic : newUser.ProfilePic;
 
             await _context.SaveChangesAsync();
 
