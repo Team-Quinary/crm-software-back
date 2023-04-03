@@ -63,6 +63,19 @@ namespace crm_software_back.Controllers
             return Ok(users);
         }
 
+        [HttpGet("Dashboard")]
+        public async Task<ActionResult<DTODashBoard>> getDashboardData()
+        {
+            var dashboardData = await _userService.getDashboardData();
+
+            if (dashboardData == null)
+            {
+                return NotFound("Users list is Empty..!");
+            }
+
+            return Ok(dashboardData);
+        }
+
         [HttpPost]
         public async Task<ActionResult<User?>> postUser(User newUser)
         {

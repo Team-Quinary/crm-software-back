@@ -15,7 +15,6 @@ using System.Text;
 using crm_software_back.Services.EnduserServices;
 using Stripe;
 using crm_software_back.Services.PaymentServices;
-using crm_software_back.Services.EmailService;
 using crm_software_back.Services.FeedbackFormServices;
 using crm_software_back.Models;
 using crm_software_back.Services.FormServices;

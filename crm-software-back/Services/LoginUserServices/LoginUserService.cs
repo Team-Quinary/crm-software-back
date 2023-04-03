@@ -145,6 +145,7 @@ namespace crm_software_back.Services.LoginUserServices
 
             loginUser.FirstName = user.FirstName;
             loginUser.LastName = user.LastName;
+            loginUser.Email = user.Email;
 
             if (File.Exists(filePath))
             {

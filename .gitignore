@@ -44,7 +44,7 @@ crm-software-back/[Bb]in/
 crm-software-back/[Oo]bj/
 crm-software-back/[Ll]og/
 crm-software-back/[Ll]ogs/
-crm-software-back/Migrations
+# crm-software-back/Migrations
 crm-software-back/appsettings.json
 crm-software-back/crm-software-back.csproj
 

@@ -29,7 +29,5 @@ namespace crm_software_back.Data
         public DbSet<FeedbackFormQuestion> FormQuestions { get; set; }
 
         public DbSet<Answer> Answers { get; set; }
-
-
     }
 }
