@@ -31,7 +31,7 @@ namespace crm_software_back.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Answer>?>> GetAnswer()
         {
-            var answer = await _AnswerServices.GetAnswer();
+            var answer = await _AnswerServices.GetAnswers();
 
             if (answer == null)
             {
