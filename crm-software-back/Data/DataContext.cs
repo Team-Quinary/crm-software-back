@@ -26,8 +26,10 @@ namespace crm_software_back.Data
 
         public DbSet<FeedbackForm> FeedbackForms { get; set; }
 
-        public DbSet<FeedbackFormQuestion> FormQuestions { get; set; }
+        public DbSet<Question> Questions { get; set; }
 
         public DbSet<Answer> Answers { get; set; }
+
+        public DbSet<Option> Options { get; set; }
     }
 }

@@ -18,6 +18,9 @@ using crm_software_back.Services.PaymentServices;
 using crm_software_back.Services.FeedbackFormServices;
 using crm_software_back.Models;
 using crm_software_back.Services.FormServices;
+using crm_software_back.Services.QuestionServices;
+using crm_software_back.Services.AnswerServices;
+using crm_software_back.Services.OptionServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,7 +82,10 @@ builder.Services.AddScoped<ILoginUserService, LoginUserService>();
 builder.Services.AddScoped<ICustomerService, crm_software_back.Services.CustomerServices.CustomerService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<IFeedackFormServices, FeedbackFormServices>(); 
+builder.Services.AddScoped<IFeedbackFormServices, FeedbackFormServices>(); 
+builder.Services.AddScoped<IQuestionServices, QuestionsServices>(); 
+builder.Services.AddScoped<IOptionServices, OptionServices>();
+builder.Services.AddScoped<IAnswerServices, AnswerServices>();
 var app = builder.Build();
 
 app.UseCors(option =>
